@@ -3,8 +3,14 @@ package com.example.service;
 import com.example.entity.Message;
 import com.example.exception.BadRequestException;
 import com.example.repository.MessageRepository;
+
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class MessageService {
@@ -31,4 +37,30 @@ public class MessageService {
         // Save the message and return it with message_id populated
         return messageRepository.save(message);
     }
+
+    public List<Message> getMessages() {
+        return  messageRepository.findAll();
+    }
+
+    public Optional<Message> getMessageById(int id) {
+        return messageRepository.findById(id);
+    }
+
+    public int deleteMessageById(int id) {
+        return messageRepository.deleteMessageById(id);
+    }
+
+    public Message updateMessage(Message message) {
+        Optional<Message> messageOptional = messageRepository.findById(message.getMessageId());
+        if (messageOptional.isPresent()) {
+            return messageRepository.save(message);
+        }
+        return null;
+    }
+
+    public List<Message> getAllMessagesByUserId(int postedBy) {
+        return messageRepository.findAllByPostedBy(postedBy);
+    }
+
+
 }
